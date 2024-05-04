@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Connect to MongoDB
@@ -19,15 +20,15 @@ const User = require('../models/User');
 // Add a new user
 router.post('/register', async (req, res) => {
     try {
-        const {email, password } = req.body;
+        const {email, password, firstname, lastname } = req.body;
 
         // Validate input
-        if(!email || !password) {
+        if(!email || !password || !firstname || !lastname) {
             return res.status(400).json({error: 'Invalid input, send email, password, firstname and lastname'});
         }
 
         // Correct - saver user
-        const user = new User({ email, password });
+        const user = new User({ email, password, firstname, lastname });
         await user.save();
         res.status(201).json({ message: 'User created'});
         
@@ -59,10 +60,18 @@ router.post('/login', async (req, res) => {
         if(!isPasswordMatch) {
             return res.status(401).json({ error: 'Incorrect email or password'});
         } else {
-            res.status(200).json({ message: 'User loged in!'})
+            // Create JWT
+            const payload = { email: email };
+            const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '1h'});
+            const response = {
+                message: 'User loged in!',
+                token: token
+            }
+            res.status(200).json({ response });
         }
 
     } catch (error) {
+        
         res.status(500).json({ error: "Server error"});
     }
 });

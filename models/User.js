@@ -13,13 +13,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    /*
     firstname: {
         type: String
     },
     lastname: {
         type: String
-    },*/
+    },
     created: {
         type: Date,
         default: Date.now
@@ -42,9 +41,9 @@ userSchema.pre('save', async function (next) {
 });
 
 // Register user
-userSchema.statics.register = async function (email, password) {
+userSchema.statics.register = async function (email, password, firstname, lastname) {
     try {
-        const user = new this({email, password});
+        const user = new this({email, password, firstname, lastname});
         await user.save();
         return user;
     } catch (error) {
