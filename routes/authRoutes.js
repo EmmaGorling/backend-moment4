@@ -49,7 +49,7 @@ router.post('/login', async (req, res) => {
         // Check credentials
         
         // Does user exists?
-        const user = await user.findOne({ email });
+        const user = await User.findOne({ email });
         if(!user) {
             return res.status(401).json({ error: 'Incorrect email or password'});
         }
