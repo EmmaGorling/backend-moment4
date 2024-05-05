@@ -28,10 +28,10 @@ function authenticateToken(req, res, next) {
 
     if(token == null) res.status(401).json({ message: 'Not authorized for this route - token is missing!'});
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, email) => {
-        if(err) return res.status(403).json({ massage: 'Invalid JWT!'});
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+        if(err) return res.status(403).json({ message: 'Invalid JWT!'});
 
-        req.email = email;
+        req.user = user;
         next();
     })
 
