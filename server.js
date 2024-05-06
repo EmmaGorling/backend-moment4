@@ -18,7 +18,8 @@ app.use('/api', authRoutes);
 
 // Protected routes
 app.get('/api/protected', authenticateToken, (req, res) => {
-    res.json({ message: 'Detta är en skyddad route' });
+    const userEmail = req.user.email;
+    res.json({ message: 'Detta är en skyddad route', userEmail: userEmail });
 });
 
 // Validate token
